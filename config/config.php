@@ -9,21 +9,31 @@ return [
      * json - settings are persisted into json file
      */
 
-    'driver' => 'json',
+    'driver' => 'database',
 
 
     /**
      * Sql table used to store the settings
      * Take note that it's used only when `database` driver is selected
      */
+
     'table' => 'laravel_settings',
+
+
+    /**
+     * The default scope for the settings
+     */
+
+    'default_scope' => 'default',
 
 
     /**
      * Json file used to store the settings
      * Take note that it's used only when `json` driver is selected
      */
+
     'json_file' => storage_path('app/settings.json'),
+
 
     /**
      * This option let us to fallback to the laravel config options

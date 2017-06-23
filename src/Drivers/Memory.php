@@ -25,4 +25,20 @@ class Memory implements DriverContract
         //
     }
 
+    /**
+     * @param string $scope
+     * @return $this
+     */
+    public function setScope($scope)
+    {
+        // TODO: Implement setScope() method.
+    }
+
+    /**
+     * @return string
+     */
+    public function getScope()
+    {
+        // TODO: Implement getScope() method.
+    }
 }

@@ -2,7 +2,6 @@
 namespace IonutMilica\LaravelSettings;
 
 use Illuminate\Contracts\Config\Repository as ConfigContract;
-use Illuminate\Support\Arr;
 
 class SettingsImpl implements SettingsContract
 {
@@ -57,9 +56,9 @@ class SettingsImpl implements SettingsContract
     /**
      * Get setting by key
      *
-     * @param $key
-     * @param null $default
-     * @param bool $save
+     * @param  string $key
+     * @param  string|null $default
+     * @param  bool $save
      * @return mixed
      */
     public function get($key, $default = null, $save = false)
@@ -78,35 +77,38 @@ class SettingsImpl implements SettingsContract
             return $this->config->get($key);
         }
 
-        return $default;
+        $defaultSettings = isset($default['default']) ? $default['default'] : [];
+        $scopedSettings  = isset($default[$this->driver->getScope()]) ? $default[$this->driver->getScope()] : [];
+
+        return array_merge($defaultSettings,$scopedSettings);
     }
 
     /**
      * Update setting
      *
-     * @param $key
-     * @param $value
+     * @param  string $key
+     * @param  string $value
      * @return mixed
      */
     public function set($key, $value)
     {
         $this->load();
 
-        if ( ! $this->has($key)) {
-            $this->dirt[$key] = [
-                'type' => 'created',
-                'value' => $value,
-            ];
-        }
-
-        if ($this->has($key) && $this->get($key) != $value) {
-            $this->dirt[$key] = [
+        if ($this->has($this->driver->getScope() . '.' . $key) && $this->get($this->driver->getScope() . '.' . $key) != $value) {
+            $this->dirt[$this->driver->getScope()][$key] = [
                 'type' => 'updated',
                 'value' => $value
             ];
         }
 
-        Arr::set($this->settings, $key, $value);
+        if ( ! $this->has($this->driver->getScope() . '.' . $key)) {
+            $this->dirt[$this->driver->getScope()][$key] = [
+                'type' => 'created',
+                'value' => $value,
+            ];
+        }
+
+        Arr::set($this->settings, $key, $value, $this->driver->getScope());
 
         return $value;
     }
@@ -114,7 +116,7 @@ class SettingsImpl implements SettingsContract
     /**
      * Forget setting
      *
-     * @param $key string
+     * @param string $key
      */
     public function forget($key)
     {
@@ -129,7 +131,7 @@ class SettingsImpl implements SettingsContract
     /**
      * Check if setting key exists
      *
-     * @param $key
+     * @param  string $key
      * @return mixed
      */
     public function has($key)
@@ -168,7 +170,7 @@ class SettingsImpl implements SettingsContract
     /**
      * Check if setting exist via isset($settings['something']))
      *
-     * @param mixed $offset
+     * @param  mixed $offset
      * @return mixed
      */
     public function offsetExists($offset)
@@ -179,7 +181,7 @@ class SettingsImpl implements SettingsContract
     /**
      * Get setting via []
      *
-     * @param mixed $offset
+     * @param  mixed $offset
      * @return mixed
      */
     public function offsetGet($offset)
@@ -190,8 +192,8 @@ class SettingsImpl implements SettingsContract
     /**
      * Add/Edit a setting
      *
-     * @param mixed $offset
-     * @param mixed $value
+     * @param  mixed $offset
+     * @param  mixed $value
      * @throws InvalidArrayAssignment
      */
     public function offsetSet($offset, $value)
@@ -211,6 +213,11 @@ class SettingsImpl implements SettingsContract
     public function offsetUnset($offset)
     {
         $this->forget($offset);
+    }
+
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
 }

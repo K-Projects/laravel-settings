@@ -12,12 +12,13 @@ class Arr
      *
      * If no key is given to the method, the entire array will be replaced.
      *
-     * @param  array   $array
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param  array $array
+     * @param  string $key
+     * @param  mixed $value
+     * @param  string $scope
      * @return array
      */
-    public static function set(&$array, $key, $value)
+    public static function set(&$array, $key, $value, $scope)
     {
         if (is_null($key)) {
             return $array = $value;
@@ -38,7 +39,7 @@ class Arr
             $array = &$array[$key];
         }
 
-        $array[array_shift($keys)] = $value;
+        $array[$scope][array_shift($keys)] = $value;
 
         return $array;
     }
@@ -116,12 +117,12 @@ class Arr
             return false;
         }
 
-        if (array_key_exists($key, $array)) {
+        if (isset($array[$key])) {
             return true;
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (! is_array($array) || ! array_key_exists($segment, $array)) {
+            if (! is_array($array) || ! isset($array[$segment])) {
                 return false;
             }
 

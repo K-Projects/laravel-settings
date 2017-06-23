@@ -11,21 +11,24 @@ class Json implements DriverContract
     protected $filePath;
 
     /**
-     * Json constructor.
-     * @param $filePath
+     * @var null
      */
-    public function __construct($filePath)
+    private $scope = 'default';
+
+    /**
+     * Json constructor.
+     *
+     * @param $filePath
+     * @param null $scope
+     */
+    public function __construct($filePath, $scope = null)
     {
         $this->filePath = $filePath;
+        $this->scope = $scope ?? $this->scope;
     }
 
     /**
-     * Save dirty data into the data source
-     *
-     * @param array $data
-     * @param array $dirt
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function save(array $data = [], array $dirt = [])
     {
@@ -38,7 +41,7 @@ class Json implements DriverContract
     }
 
     /**
-     * Prepare the data for driver operations
+     * {@inheritdoc}
      */
     public function load()
     {
@@ -48,7 +51,24 @@ class Json implements DriverContract
             $data = json_decode(file_get_contents($this->filePath), true);
         }
 
-        return $data;
+        return $data[$this->getScope()];
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
 }

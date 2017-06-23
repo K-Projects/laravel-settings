@@ -1,4 +1,5 @@
 <?php
+
 namespace IonutMilica\LaravelSettings;
 
 use IonutMilica\LaravelSettings\Drivers\Database;
@@ -35,7 +36,11 @@ class DriversManager extends Manager
      */
     public function createDatabaseDriver()
     {
-        return new Database($this->app['db'], $this->config('settings.table'));
+        return new Database(
+            $this->app['db'],
+            $this->config('settings.table'),
+            $this->config('settings.default_scope')
+        );
     }
 
     /**

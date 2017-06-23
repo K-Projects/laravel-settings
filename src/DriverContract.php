@@ -14,9 +14,20 @@ interface DriverContract
     /**
      * Save settings into the data storage: memory, json, db, ...
      *
-     * @param array $settings
-     * @param array $dirt
+     * @param  array $settings
+     * @param  array $dirt
      * @return mixed
      */
     public function save(array $settings = [], array $dirt = []);
+
+    /**
+     * @param string $scope
+     * @return $this
+     */
+    public function setScope($scope);
+
+    /**
+     * @return string
+     */
+    public function getScope();
 }
