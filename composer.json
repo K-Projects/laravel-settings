@@ -1,0 +1,33 @@
+{
+  "name": "ionutmilica/laravel-settings",
+  "authors": [
+    {
+      "name": "Milica Ionut",
+      "email": "ionut.milica@gmail.com"
+    },
+
+    {
+      "name": "Van de Vijver Johan",
+      "email": "johan@my-portfolio.be"
+    }
+  ],
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+        "IonutMilica\\LaravelSettings\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/session": "~5.0",
+    "illuminate/database": "~5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+        "IonutMilica\\LaravelSettings\\Tests\\": "tests/"
+    }
+  }
+}
