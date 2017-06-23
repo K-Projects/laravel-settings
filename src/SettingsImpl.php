@@ -102,6 +102,13 @@ class SettingsImpl implements SettingsContract
         }
 
         if ( ! $this->has($this->driver->getScope() . '.' . $key)) {
+            if ( ! $this->has('default.' . $key)) {
+                $this->dirt['default'][$key] = [
+                    'type' => 'created',
+                    'value' => $value,
+                ];
+            }
+
             $this->dirt[$this->driver->getScope()][$key] = [
                 'type' => 'created',
                 'value' => $value,
